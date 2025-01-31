@@ -12,12 +12,47 @@ the function below should be the only one in this file.
 
 #include "split.h"
 
-/* Add a prototype for a helper function here if you need */
+/* Prototype for helper function goes here if needed */
+Node* initNewNodeWith(Node*& in);
 
 void split(Node*& in, Node*& odds, Node*& evens)
 {
-  /* Add code here */
-// WRITE YOUR CODE HERE
+    // base case
+    if(in == nullptr) return;
+
+    // evaluate odd or even
+    if(in->value % 2 == 0)
+    { 
+      if(evens == nullptr)
+      {
+        evens = initNewNodeWith(in);
+      }
+      else
+      {
+        evens->next = in;
+      }
+    }
+    else
+    {
+      if(odds == nullptr)
+      {
+        odds = initNewNodeWith(in);
+      }
+      else
+      {
+        odds->next = in;
+      }
+    }
+
+    // recursive step
+    in = in->next;
+    split(in, odds, evens);
 }
 
-/* If you needed a helper function, write it here */
+/* If you need a helper function, write it here */
+Node* initNewNodeWith(Node*& in)
+{
+  Node* out = new Node(0,nullptr);
+  out->value = in->value;
+  return out;
+}
