@@ -5,7 +5,8 @@
 #include <iostream>
 #include <string>
 
-void initializeFromSelfTest(std::string name, Node*& list);
+void initializeFromFile(std::string name, Node*& list);
+void printNodeList(Node*& list);
 void deleteNodeList(Node*& list);
 void printBegin();
 void printLine(int);
@@ -21,23 +22,41 @@ int main(int argc, char* argv[])
     }
 
     Node* list = new Node(0,nullptr);
-    initializeFromSelfTest("split", list);
+    initializeFromFile("split", list);
+
+    Node* odds = nullptr;
+    Node* evens = nullptr;
+
+    printNodeList(list);
+    split(list, odds, evens);
+
+    debugPrint("Evens:");
+    printNodeList(evens);
+    debugPrint("Odds:");
+    printNodeList(odds);
+
     deleteNodeList(list);
 }
 
-void initializeFromSelfTest(std::string name, Node*& list)
+void initializeFromFile(std::string name, Node*& list)
 {
     std::ifstream ifs;
     ifs.open("selftest_" + name + ".txt");
     debugPrint("Reading from file: selftest_" + name + ".txt...");
 
     std::string temp;
+    Node* ptr = list;
+    std::getline(ifs,temp);
+    list->value = stoi(temp);
+    debugPrint("Value read from file: " + temp);
+    debugPrint("Value read from list: " + std::to_string(list->value));
     while(ifs.good())
     {
         std::getline(ifs,temp);
         debugPrint("Value read from file: " + temp);
-        list->next = new Node(stoi(temp),nullptr);
-        debugPrint("Value read from list: " + list->next->value);
+        ptr->next = new Node(stoi(temp),nullptr);
+        debugPrint("Value read from list: " + std::to_string(ptr->next->value));
+        ptr = ptr->next;
     }
     ifs.close();
 
@@ -47,17 +66,17 @@ void initializeFromSelfTest(std::string name, Node*& list)
 
 void deleteNodeList(Node*& list)
 {
-    debugPrint("Deleting Node list with initial value: " + list->value);
+    debugPrint("line");
+    debugPrint("Deleting Node list with initial value: " + std::to_string(list->value));
     while(list->next != nullptr)
     {
-        debugPrint("Deleting: " + list->value);
+        debugPrint("Deleting: " + std::to_string(list->value));
 
-        Node* temp = new Node(0,nullptr);
-        temp = list;
+        Node* temp = list;
         list = list->next;
-        delete temp->next;
         delete temp;
     }
+    debugPrint("Deleting: " + std::to_string(list->value));
     delete list;
 }
 
@@ -68,17 +87,15 @@ void debugPrint(std::string message)
         if(message == "line")
         {
             printLine(40);
-            return;
         }
-        std::cout << message << std::endl;
+        else std::cout << message << std::endl;
     }
 }
 
 void printBegin()
 {
     printLine(40);
-    std::cout << "Debug Mode enabled for this Test." << std::endl;
-    printLine(40);
+    std::cout << "Debug Mode enabled for this Self-Test." << std::endl;
 }
 
 void printLine(int width)
@@ -88,4 +105,22 @@ void printLine(int width)
         std::cout << "_";
     }
     std::cout << std::endl;
+}
+
+void printNodeList(Node*& list)
+{
+    if(!debugMode) return;
+
+    printLine(40);
+
+    debugPrint("Printing Node list with initial value: " + std::to_string(list->value));
+    Node* ptr = list;
+    int i = 0;
+    while(ptr != nullptr)
+    {
+        debugPrint("Node " + std::to_string(i) + ": " + std::to_string(ptr->value));
+        ptr = ptr->next;
+        i++;
+    }
+    delete ptr;
 }

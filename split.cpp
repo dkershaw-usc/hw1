@@ -13,7 +13,7 @@ the function below should be the only one in this file.
 #include "split.h"
 
 /* Prototype for helper function goes here if needed */
-Node* initNewNodeWith(Node*& in);
+void splitHelp(Node*& in, Node*& out);
 
 void split(Node*& in, Node*& odds, Node*& evens)
 {
@@ -25,34 +25,41 @@ void split(Node*& in, Node*& odds, Node*& evens)
     { 
       if(evens == nullptr)
       {
-        evens = initNewNodeWith(in);
+        // `evens` gets current idx
+        evens = in;
+        // `in` moves forward 1
+        in = in->next;
+        // detach `in->next` from current `evens` tail
+        evens->next = nullptr;
       }
       else
       {
-        evens->next = in;
+        splitHelp(in, evens);
       }
+
+      split(in, evens->next, odds);
     }
     else
     {
       if(odds == nullptr)
       {
-        odds = initNewNodeWith(in);
+        odds = in;
+        in = in->next;
+        evens->next = nullptr;
       }
       else
       {
-        odds->next = in;
+        splitHelp(in, odds);
       }
-    }
 
-    // recursive step
-    in = in->next;
-    split(in, odds, evens);
+      split(in, evens, odds->next);
+    }
 }
 
 /* If you need a helper function, write it here */
-Node* initNewNodeWith(Node*& in)
+void splitHelp(Node*& in, Node*& out)
 {
-  Node* out = new Node(0,nullptr);
-  out->value = in->value;
-  return out;
+  out->next = in;
+  in = in->next;
+  out->next->next = nullptr;
 }
