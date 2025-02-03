@@ -24,18 +24,19 @@ int main(int argc, char* argv[])
     Node* list = new Node(0,nullptr);
     initializeFromFile("split", list);
 
-    Node* odds = nullptr;
+    Node* odds = NULL;
     Node* evens = nullptr;
 
     printNodeList(list);
     split(list, odds, evens);
 
-    debugPrint("Evens:");
-    printNodeList(evens);
     debugPrint("Odds:");
     printNodeList(odds);
-
-    deleteNodeList(list);
+    debugPrint("Evens:");
+    printNodeList(evens);
+    
+    deleteNodeList(evens);
+    deleteNodeList(odds);
 }
 
 void initializeFromFile(std::string name, Node*& list)

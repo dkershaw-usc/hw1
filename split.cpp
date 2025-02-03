@@ -13,7 +13,7 @@ the function below should be the only one in this file.
 #include "split.h"
 
 /* Prototype for helper function goes here if needed */
-void splitHelp(Node*& in, Node*& out);
+void append(Node*& in, Node*& out);
 
 void split(Node*& in, Node*& odds, Node*& evens)
 {
@@ -21,45 +21,28 @@ void split(Node*& in, Node*& odds, Node*& evens)
     if(in == nullptr) return;
 
     // evaluate odd or even
-    if(in->value % 2 == 0)
-    { 
-      if(evens == nullptr)
-      {
-        // `evens` gets current idx
-        evens = in;
-        // `in` moves forward 1
-        in = in->next;
-        // detach `in->next` from current `evens` tail
-        evens->next = nullptr;
-      }
-      else
-      {
-        splitHelp(in, evens);
-      }
-
-      split(in, evens->next, odds);
+    if(in->value % 2 == 1)
+    {
+      //odds = new Node(0,nullptr);
+      odds = in;
+      in = in->next;
+      odds->next = nullptr;
+      split(in, odds->next, evens);
     }
     else
     {
-      if(odds == nullptr)
-      {
-        odds = in;
-        in = in->next;
-        evens->next = nullptr;
-      }
-      else
-      {
-        splitHelp(in, odds);
-      }
-
-      split(in, evens, odds->next);
+      //evens = new Node(0,nullptr);
+      evens = in;
+      in = in->next;
+      evens->next = nullptr;
+      split(in, odds, evens->next);
     }
+
 }
 
 /* If you need a helper function, write it here */
-void splitHelp(Node*& in, Node*& out)
+// appends node b to nodelist a.
+void append(Node*& a, Node*& b)
 {
-  out->next = in;
-  in = in->next;
-  out->next->next = nullptr;
+  a->next = b;
 }
