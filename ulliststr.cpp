@@ -31,17 +31,58 @@ size_t ULListStr::size() const
 // O(1) req'd
 void ULListStr::push_back(const std::string& val)
 {
-  // find rearmost element+1
-  // case 0: has room. just insert
-  // case 1: no room. allocate new, insert at front
+  // goal: find rearmost element+1, insert there
+
+  // case 0: has room; just insert
+  if(tail_->last < ARRSIZE)
+  {
+    tail_->last++;
+    tail_->val->push_back(val[0]);
+
+    // case 0a: length of insertion > 1
+    if(val.length() > 1)
+    {
+      std::string temp = val;
+      temp.erase(0);
+      push_back(temp);
+      return;
+    }
+  }
+  // case 1: no room; allocate new, insert at front
+  else
+  {
+    Item* temp = tail_;
+    tail_ = new Item();
+    temp->next = tail_;
+    
+    for(size_t i = 0; i < val.length(); i++)
+    {
+      tail_->val[i] = val[i];
+    }
+    tail_->last = val.length();
+  }
 }
 
 // Removes a value from the back of the list
 // O(1) req'd
 void ULListStr::pop_back()
 {
-  // find rearmost element
-  // trash it
+  // goal: find rearmost element and trash it
+  
+  // case 0: last element in array
+  if(tail_->last == 1)
+  {
+    Item* temp = tail_;
+    tail_ = tail_->prev;
+    tail_->next = NULL;
+    delete temp;
+  }
+  // case 1: not last element
+  else
+  {
+    tail_->val->erase(tail_->last - 1);
+    tail_->last--;
+  }
 }
 
 // Adds a new value to the front of the list.
@@ -57,21 +98,23 @@ void ULListStr::push_front(const std::string& val)
 // O(1) req'd
 void ULListStr::pop_front()
 {
-
+  // TODO:
 }
 
 // Returns a const reference to the back element
 // O(1) req'd
 std::string const & ULListStr::back() const
 {
-
+  // TODO: 
+  return NULL;
 }
 
 // Returns a const reference to the front element
 // O(1) req'd
 std::string const & ULListStr::front() const
 {
-
+  // TODO:
+  return NULL;
 }
 
 // Returns a pointer to the item at index, loc,
@@ -79,7 +122,8 @@ std::string const & ULListStr::front() const
 // O(n) req'd
 std::string* ULListStr::getValAtLoc(size_t loc) const
 {
-  
+  // TODO:
+  return NULL;
 }
 
 //#####################
