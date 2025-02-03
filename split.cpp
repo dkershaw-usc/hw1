@@ -23,7 +23,6 @@ void split(Node*& in, Node*& odds, Node*& evens)
     // evaluate odd or even
     if(in->value % 2 == 1)
     {
-      //odds = new Node(0,nullptr);
       odds = in;
       in = in->next;
       odds->next = nullptr;
@@ -31,7 +30,6 @@ void split(Node*& in, Node*& odds, Node*& evens)
     }
     else
     {
-      //evens = new Node(0,nullptr);
       evens = in;
       in = in->next;
       evens->next = nullptr;
