@@ -25,9 +25,6 @@ size_t ULListStr::size() const
 }
 
 // WRITE YOUR CODE HERE
-//#####################
-//#####################
-//#####################
 
 // Adds a new value to the back of the list
 // O(1) req'd
@@ -200,9 +197,7 @@ std::string* ULListStr::getValAtLoc(size_t loc) const
   return &item->val[loc-1];
 }
 
-//#####################
-//#####################
-//#####################
+// End Student Code
 
 void ULListStr::set(size_t loc, const std::string& val)
 {
