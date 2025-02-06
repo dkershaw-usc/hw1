@@ -14,6 +14,8 @@ void debugPrint(std::string);
 void initializeFromFile(std::string, ULListStr*&);
 bool debugMode;
 
+void printListIndex(ULListStr*& ulist, size_t idx);
+
 int main(int argc, char* argv[])
 {
     if(argc < 2) debugMode = true;
@@ -26,7 +28,17 @@ int main(int argc, char* argv[])
     a->push_front("barnacle");
     printList(a);
     a->pop_back();
-    printList(a);
+    // printList(a);
+    debugPrint("line");
+
+    while(!a->empty())
+    {
+        // printList(a);
+        printListIndex(a, a->size()-1);
+        a->pop_front();
+    }
+
+
     return 0;
 }
 
@@ -38,10 +50,16 @@ void initializeFromFile(std::string name, ULListStr*& ulist)
 
     std::string temp;
 
+    int i = 0;
+
     while(ifs.good())
     {
         std::getline(ifs,temp);
         ulist->push_back(temp);
+        // debugPrint(ulist->front());
+        // debugPrint(ulist->back());
+        // //debugPrint(ulist->get(i));
+        i++;
     }
     ifs.close();
 
@@ -74,4 +92,9 @@ void printList(ULListStr*& ulist)
     if(!debugMode) return;
     debugPrint((std::string) ulist->front());
     debugPrint(ulist->back());
+}
+
+void printListIndex(ULListStr*& ulist, size_t idx)
+{
+    debugPrint(ulist->get(idx));
 }

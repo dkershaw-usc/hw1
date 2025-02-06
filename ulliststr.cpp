@@ -44,7 +44,6 @@ void ULListStr::push_back(const std::string& val)
   if(tail_->last < ARRSIZE)
   {
     tail_->val[tail_->last] = val;
-    tail_->last++;
   }
   // case 1: no room; allocate new, insert at front
   else
@@ -58,6 +57,7 @@ void ULListStr::push_back(const std::string& val)
     tail_->val[0] = val;
   }
 
+  tail_->last++;
   // no matter what, update size
   size_++;
 }
@@ -66,10 +66,20 @@ void ULListStr::push_back(const std::string& val)
 // O(1) req'd
 void ULListStr::pop_back()
 {
+  if(empty()) return;
+
   // goal: find rearmost element and trash it
   // case 0: last element in array
   if(tail_->last - tail_->first == 1)
   {
+    if(size_ == 1)
+    {
+      delete head_;
+      head_ = tail_ = NULL;
+      size_ = 0;
+      return;
+    }
+
     Item* temp = tail_;
     tail_ = tail_->prev;
     tail_->next = NULL;
@@ -78,7 +88,7 @@ void ULListStr::pop_back()
   // case 1: not last element
   else
   {
-    tail_->val->erase(tail_->last - 1);
+    tail_->val[tail_->last - 1] = "ERROR_DELETED_ELEMENT";
     tail_->last--;
   }
   
@@ -108,17 +118,11 @@ void ULListStr::push_front(const std::string& val)
   {
     Item* temp = head_;
     head_ = new Item();
-    if(temp != NULL) temp->prev = head_;
+    temp->prev = head_;
     head_->prev = NULL;
 
-    // populate from first to end
-    for(size_t i = ARRSIZE - val.length() - 1; i < head_->first + val.length(); i++)
-    {
-      tail_->val[i] = val[i - head_->first];
-    }
-
-    head_->first = ARRSIZE - val.length();
-    head_->last = ARRSIZE;
+    head_->val[0] = val;
+    head_->last++;
   }
 
   // no matter what, update size
@@ -129,10 +133,20 @@ void ULListStr::push_front(const std::string& val)
 // O(1) req'd
 void ULListStr::pop_front()
 {
+  if(empty()) return;
+
   // goal: find frontmost element and trash it
   // case 0: entry is "last survivor" in Item
   if(head_->last - head_->first == 1)
   {
+    if(size_ == 1)
+    {
+      delete head_;
+      head_ = tail_ = NULL;
+      size_ = 0;
+      return;
+    }
+
     Item* temp = head_;
     head_ = head_->next;
     head_->prev = NULL;
@@ -141,7 +155,7 @@ void ULListStr::pop_front()
   // case 1: Item has >= 2 entries
   else
   {
-    head_->val->erase(head_->first,1);
+    head_->val[head_->first] = "#EXPECTED_DELETE";
     head_->first++;
   }
 
@@ -172,15 +186,18 @@ std::string* ULListStr::getValAtLoc(size_t loc) const
   if(loc < 0) return NULL;
 
   Item* item = head_;
-  size_t i = item->val->length();
 
-  while(i < loc)
+  if(loc < ARRSIZE)
   {
-    item = item->next;
-    i += item->val->length();
+    return &head_->val[item->first+loc];
   }
 
-  return &item->val[i - loc];
+  while(loc > ARRSIZE)
+  {
+    loc -= (item->last - item->first);
+    item = item->next;
+  }
+  return &item->val[loc-1];
 }
 
 //#####################
